@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>客户管理</title>
+<style type="text/css">
+#customerTable{
+width:90%;
+}
+.modal{ 
+position:absolute; 
+left:57px; 
+top:30px; 
+width:668px; 
+height:240px; 
+z-index:1000; 
+background-color:#CCCCCC; 
+filter : progid:DXImageTransform.Microsoft.Alpha ( enabled=true , style=0 , opacity=40); 
+} 
+#customerTable,td,th{
+	border: 1px solid #6e98e4;
+	border-collapse:collapse;
+}
+#customerTable{
+margin-top:10px;
+}
+#customerTable th 
+  {
+  font-size:1.1em;
+  text-align:center;
+  padding-top:5px;
+  padding-bottom:4px;
+  background-color:#6e98e4;
+  color:#ffffff;
+  }
+   /* 偶数行  */
+  #customerTable tr:nth-of-type(odd){
+   background:#c1cfe9;
+   }
+</style>
+</head>
+<body>
+<h3>客户管理</h3>
+<button type="button" onclick="addCustomer()">新增</button>
+
+	<table id="customerTable" >
+		<tr>
+			<th>序号</th>
+			<th>姓名</th>
+			<th>街道</th>
+			<th>城市</th>
+			<th>操作</th>
+		</tr>
+	</table>
+	
+	
+</body>
+<script type="text/javascript" src="js/jquery-3.0.0.min.js"></script>
+<script type="text/javascript">
+var pathName = document.location.pathname;
+var index = pathName.substr(1).indexOf("/");
+var basePath = pathName.substr(0,index+1);
+$(function(){
+	getAll();
+})
+
+function getAll(){
+	$.ajax({
+		type:"post",
+		url:basePath+"/customer/getAll.do",
+		data:{},
+		success:function(res){
+			$("#customerTable tr:gt(0)").remove();
+			if(res){
+				for(var i in res){
+					//var editBtn="<a href='javascript:edit("+res[i].id+")'>编辑</a>";
+					var deleteBtn="<a href='javascript:deleteCustomer("+res[i].id+")'>删除</a>";
+					$("#customerTable").append("<tr><td>"+(Number(i)+1)+"</td><td>"+res[i].cname+"</td><td>"+res[i].street+"</td><td>"+res[i].city+"</td><td>"+deleteBtn+"</td></tr>");
+				}
+			}
+		}
+		
+	});
+}
+/**
+ * 新增
+ */
+function addCustomer(){
+	window.open(basePath+"/addCustomer.html","","channelmode=yes,width=500,height=300,left=500,top=300")
+}
+/**
+ * 删除
+ */
+ function deleteCustomer(id){
+	if(!confirm("确认删除？")){
+		return ;	
+	}
+	 $.ajax({
+			type:"post",
+			url:basePath+"/customer/delete.do",
+			data:{id:id},
+			success:function(res){
+				if(res.code==200){
+					alert("操作成功");
+					//刷新列表
+					getAll();
+				}else{
+					alert(res.msg);
+				}
+			}
+			
+		});
+}
+ 
+</script>
+</html>

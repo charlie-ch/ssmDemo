@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>增加产品</title>
+</head>
+<body>
+	<h3>增加产品</h3>
+	<form id="addForm">
+		<table>
+			<tr>
+				<td>产品名：</td>
+				<td><input type="text" name="name" id="name" /></td>
+			</tr>
+			<tr>
+				<td>价格：</td>
+				<td><input type="text" name="price" id="price" /></td>
+			</tr>
+			<tr>
+				<td><input type="button" value="保存" onclick="saveProduct()" /><input
+					type="button" onclick="closePage()" value="返回" /></td>
+			</tr>
+		</table>
+	</form>
+</body>
+<script type="text/javascript" src="js/jquery-3.0.0.min.js"></script>
+<script type="text/javascript">
+
+var basePath = document.location.pathname.substr(0,document.location.pathname.substr(1).indexOf("/")+1);
+/**
+ * 新增
+ */
+function saveProduct(){
+	$.ajax({
+		type:"post",
+		data:$("#addForm").serialize(),
+		url:basePath+"/product/saveProduct.do",
+		success:function(res){
+			if(res.code=200){
+				alert("保存成功");
+				window.close();
+			}else{
+				alert(res.msg);
+			}
+		}
+	});
+}
+/**
+ * 返回 关闭
+ */
+ function closePage(){
+	 window.close();
+}
+</script>
+</html>

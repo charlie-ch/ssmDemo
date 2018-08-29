@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>主页</title>
+<style>
+
+body{
+margin: auto;
+width:80%;
+}
+#mainDiv{
+margin-top:50px;
+height:800px;
+background: #e5e5e5;
+}
+#leftDiv{
+float:left;
+width:15%;
+height:800px;
+background: #d3dff5;
+
+}
+#rightDiv{
+float:right;
+width:85%;
+height:800px;
+}
+.btn{
+width:90%;
+height:50px;
+margin:auto;
+border-bottom: 1px solid gray;
+background: #6e98e4;
+text-align: center;
+line-height: 50px;
+}
+.btn:hover{
+cursor: pointer;
+background: gray;
+
+}
+#mainDiv a{
+text-decoration: none;
+}
+#mainDiv a:link {color:black;}		/* 未被访问的链接 */
+#mainDiv a:visited {color:black;}	/* 已被访问的链接 */
+#mainDiv a:hover {color:black;}	/* 鼠标指针移动到链接上 */
+#mainDiv a:active {color:black;}	/* 正在被点击的链接 */
+
+</style>
+</head>
+<body>
+
+	<div id="mainDiv">
+		<div id="leftDiv">
+		<a href="customer.html" target="frame"><div class="btn">客户管理</div></a>
+		<a href="product.html" target="frame"><div class="btn">产品管理</div></a>
+		<a href="order.html" target="frame"><div class="btn">订单管理</div></a>
+		</div>
+		<div id="rightDiv">
+		<iframe name="frame" height="100%" width="100%" src="" frameborder="0" ></iframe>
+		</div>
+	</div>
+
+
+
+</body>
+<script type="text/javascript" src="js/jquery-3.0.0.min.js"></script>
+</html>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.mapper.CustomerMapper">
+	<!--查询所有 -->
+	<select id="getAll" resultType="com.test.entity.Customer">
+		select id,cname,street,city
+		from customer
+
+	</select>
+	<!--根据客户名查询 -->
+	<select id="getByCname" resultType="com.test.entity.Customer"
+		parameterType="com.test.entity.Customer">
+		select id,cname,street,city
+		from customer c where c.cname=#{cname}
+
+	</select>
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.test.entity.Customer">
+		insert into customer (id,cname,street,city ) values
+		(null,#{cname},#{street},#{city})
+	</insert>
+	<!-- 根据客户id查询订单个数 -->
+	<select id="hasUsedInOrder" resultType="java.lang.Integer" parameterType="com.test.entity.Customer">
+	    select count(1)  from invoice i where i.CUSTOMERID=#{id}
+	</select>
+	<!-- 删除客户信息  -->
+	<delete id="delete"  parameterType="com.test.entity.Customer">
+	   DELETE FROM `customer` WHERE `ID`=#{id}
+	</delete>
+	<!-- 查询无订单客户 -->
+	<select id="getAvailableCustomer" resultType="com.test.entity.Customer">
+	     select c.id,c.cname,c.street,c.city from customer c where c.id not in(select i.CUSTOMERID
+			from invoice i where i.CUSTOMERID is not null  )
+	    
+	</select>
+</mapper>

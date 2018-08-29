@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>订单管理</title>
+<style type="text/css">
+.table{
+width:100%;
+}
+.modal{ 
+position:absolute; 
+left:57px; 
+top:30px; 
+width:668px; 
+height:240px; 
+z-index:1000; 
+background-color:#CCCCCC; 
+filter : progid:DXImageTransform.Microsoft.Alpha ( enabled=true , style=0 , opacity=40); 
+} 
+.table,td,th{
+	border: 1px solid #6e98e4;
+	border-collapse:collapse;
+}
+.table{
+margin-top:10px;
+}
+.table th 
+  {
+  font-size:1.1em;
+  text-align:center;
+  padding-top:5px;
+  padding-bottom:4px;
+  background-color:#6e98e4;
+  color:#ffffff;
+  }
+   /* 偶数行  */
+  .table tr:nth-of-type(odd){
+   background:#c1cfe9;
+   }
+   
+   #left{
+   width:48%;
+   height:100%;
+   float:left;
+   }
+   #right{
+    width:48%;
+   height:100%;
+   float:right;
+   }
+</style>
+</head>
+<body>
+<h3>订单管理</h3>
+<div id="left">
+<h4>订单主表</h4>
+<button type="button" onclick="addInvoice()">新增</button>
+
+	<table id="table1" class="table">
+		<tr>
+			<th>序号</th>
+			<th>客户id</th>
+			<th>客户名</th>
+			<th>总金额</th>
+			<th>操作</th>
+		</tr>
+	</table>
+</div>	
+<div id="right">
+<h4>订单明细表</h4>
+<button type="button" onclick="addCustomer()">新增</button>
+
+	<table id="table2" class="table">
+		<tr>
+			<th>序号</th>
+			<th>单品名称</th>
+			<th>数量</th>
+			<th>价格</th>
+			<th>操作</th>
+		</tr>
+	</table>
+</div>	
+
+</body>
+<script type="text/javascript" src="js/jquery-3.0.0.min.js"></script>
+<script type="text/javascript">
+var pathName = document.location.pathname;
+var index = pathName.substr(1).indexOf("/");
+var basePath = pathName.substr(0,index+1);
+$(function(){
+	getAll();
+})
+
+function getAll(){
+	$.ajax({
+		type:"post",
+		url:basePath+"/order/getAllMain.do",
+		data:{},
+		success:function(res){
+			$("#table1 tr:gt(0)").remove();
+			if(res){
+				for(var i in res){
+					//var editBtn="<a href='javascript:edit("+res[i].id+")'>编辑</a>";
+					var deleteBtn="<a href='javascript:deleteInvoice("+res[i].id+")'>删除</a>";
+					if(!res[i].total){
+						//没有总金额的显示0
+						res[i].total="0";
+					}
+					$("#table1").append("<tr onclick='getItemsById("+res[i].id+")'><td>"+(Number(i)+1)+"</td><td>"+res[i].customerid+"</td><td>"+res[i].customerName+"</td><td>"+res[i].total+"</td><td>"+deleteBtn+"</td></tr>");
+				}
+			}
+		}
+		
+	});
+}
+/**
+ * 新增主表
+ */
+function addInvoice(){
+	window.open(basePath+"/addInvoice.html","","channelmode=yes,width=500,height=300,left=500,top=300")
+}
+/**
+ * 删除
+ */
+ function deleteInvoice(id){
+	if(!confirm("确认删除？")){
+		return ;	
+	}
+	 $.ajax({
+			type:"post",
+			url:basePath+"/order/delete.do",
+			data:{id:id},
+			success:function(res){
+				if(res.code==200){
+					alert("操作成功");
+					//刷新列表
+					getAll();
+				}else{
+					alert(res.msg);
+				}
+			}
+			
+		});
+}
+/**
+ * 查询订单子表
+ */
+ function getItemsById(id){
+	 $.ajax({
+			type:"post",
+			url:basePath+"/order/getItemsById.do",
+			data:{id:id},
+			success:function(res){
+				$("#table2 tr:gt(0)").remove();
+				if(res){
+					for(var i in res){
+						//var editBtn="<a href='javascript:edit("+res[i].id+")'>编辑</a>";
+						var deleteBtn="<a href='javascript:deleteItem("+res[i].id+")'>删除</a>";
+						$("#table2").append("<tr><td>"+(Number(i)+1)+"</td><td>"+res[i].item+"</td><td>"+res[i].quantity+"</td><td>"+res[i].cost+"</td><td>"+deleteBtn+"</td></tr>");
+					}
+				}
+			}
+			
+		});
+ }
+</script>
+</html>

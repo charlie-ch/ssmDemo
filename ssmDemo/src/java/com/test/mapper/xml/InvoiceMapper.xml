@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.mapper.InvoiceMapper">
+	<!--查询所有订单主表 -->
+	<select id="getAllMain" resultType="com.test.entity.Invoice">
+		SELECT
+	i.id,
+	i.CUSTOMERID,
+	c.CNAME customerName,
+	(select sum(item.QUANTITY*item.COST) from item where item.INVOICEID=i.ID ) total
+	FROM
+	invoice i,customer c where i.CUSTOMERID=c.ID
+
+	</select>
+	<!--根据名查询 -->
+	<select id="getItemsById" resultType="com.test.entity.Item"
+		parameterType="com.test.entity.Invoice">
+		SELECT
+			i.ID,
+			i.INVOICEID,
+			i.ITEM,
+			i.PRODUCTID,
+			i.QUANTITY,
+			i.COST
+			FROM
+			item AS i where i.INVOICEID =#{id}
+
+	</select>
+	<insert id="insert" parameterType="com.test.entity.Invoice">
+	    insert into invoice (id,customerid,total) values(null,#{customerid},#{total})
+	</insert>
+</mapper>

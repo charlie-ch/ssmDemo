@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.mapper.ProductMappper">
+	<!--查询所有 -->
+	<select id="getAll" resultType="com.test.entity.Product">
+		select id,name,price
+		from product
+
+	</select>
+	<!--根据名查询 -->
+	<select id="getByName" resultType="com.test.entity.Product"
+		parameterType="com.test.entity.Product">
+		select id,name,price
+		from product p where p.name=#{name}
+
+	</select>
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.test.entity.Product">
+		insert into product (id,name,price) values
+		(null,#{name},#{price})
+	</insert>
+	<!-- 根据客户id查询订单个数 -->
+	<select id="hasUsedInOrder" resultType="java.lang.Integer" parameterType="com.test.entity.Product">
+	    select count(1)  from item i where i.productid=#{id}
+	</select>
+	<!-- 删除客户信息  -->
+	<delete id="delete"  parameterType="com.test.entity.Product">
+	   DELETE FROM `product` WHERE `ID`=#{id}
+	</delete>
+</mapper>
